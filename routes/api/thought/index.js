@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const {
     getAllThoughts
-} = require('../../controllers/thoughtController');
+} = require('../../../controllers/thoughtController');
 
 router.route('/')
     .get(getAllThoughts);
