@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/todoMongoDB')
+mongoose.connect('mongodb://localhost:27017/socialMediaAPI')
     .then(async () => {
         console.log('Successfully connected to MongoDB');
     }).catch(error => console.log(error));

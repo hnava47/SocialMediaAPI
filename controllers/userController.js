@@ -4,25 +4,25 @@ const { User } = require('../models');
 module.exports = {
     getAllUsers: async (req, res) => {
         try {
-            const users = await User.find({});
+            const users = await User.find();
 
             res.json(users);
         } catch (error) {
             res.json(error);
         }
     },
-    getUser: async (req, res) => {
+    getUserById: async (req, res) => {
         const { userId } = req.params;
 
         try {
-            const user = await User.find({userId}).populate(
+            const user = await User.findById(userId).populate([
                 {
-                    path:'thoughts'
+                    path: 'thoughts'
                 },
                 {
                     path: 'friends'
                 }
-            );
+            ]);
 
             res.json(user);
         } catch (error) {
@@ -37,7 +37,7 @@ module.exports = {
         }
 
         try {
-            const newUser = User.create({
+            const newUser = await User.create({
                 username,
                 email
             });
@@ -45,6 +45,17 @@ module.exports = {
             res.json(newUser);
         } catch (error) {
             res.json(error);
+        }
+    },
+    deleteUserById: async (req, res) => {
+        const { userId } = req.params;
+
+        try {
+            const deletedUser = await User.findByIdAndDelete(userId);
+
+            res.json(deletedUser);
+        } catch (error) {
+            res.json(error)
         }
     }
 };
