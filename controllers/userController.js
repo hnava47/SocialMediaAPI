@@ -4,7 +4,15 @@ const { User } = require('../models');
 module.exports = {
     getAllUsers: async (req, res) => {
         try {
-            const users = await User.find();
+            const users = await User.find().populate([
+                {
+                    path: 'thoughts'
+                },
+                {
+                    path:'friends',
+                    select: '-thoughts'
+                }
+            ]);
 
             res.json(users);
         } catch (error) {
@@ -15,7 +23,15 @@ module.exports = {
         const { userId } = req.params;
 
         try {
-            const user = await User.findById(userId).populate('thoughts friends');
+            const user = await User.findById(userId).populate([
+                {
+                    path: 'thoughts'
+                },
+                {
+                    path:'friends',
+                    select: '-thoughts'
+                }
+            ]);
 
             res.json(user);
         } catch (error) {
@@ -67,6 +83,84 @@ module.exports = {
             res.json(deletedUser);
         } catch (error) {
             res.json(error)
+        }
+    },
+    addFriendToUser: async (req, res) => {
+        let updatedUsers = [];
+        const { userId, friendId } = req.params;
+
+        try {
+            await User.findByIdAndUpdate(
+                userId,
+                { $addToSet: { friends: friendId } }
+            );
+
+            await User.findByIdAndUpdate(
+                friendId,
+                { $addToSet: { friends: userId } }
+            );
+
+            updatedUsers.push(await User.findById(userId).populate([
+                {
+                    path: 'thoughts'
+                },
+                {
+                    path: 'friends',
+                    select: '-thoughts'
+                }
+            ]));
+
+            updatedUsers.push(await User.findById(friendId).populate([
+                {
+                    path: 'thoughts'
+                },
+                {
+                    path: 'friends',
+                    select: '-thoughts'
+                }
+            ]));
+
+            res.json(updatedUsers);
+        } catch (error) {
+            res.json(error);
+        }
+    },
+    deleteFriendFromUser: async (req, res) => {
+        let updatedUsers = [];
+        const { userId, friendId } = req.params;
+
+        try {
+            updatedUsers.push(await User.findByIdAndUpdate(
+                userId,
+                { $pull: { friends: friendId } },
+                { new: true }
+            ).populate([
+                {
+                    path: 'thoughts'
+                },
+                {
+                    path: 'friends',
+                    select: '-thoughts'
+                }
+            ]));
+
+            updatedUsers.push(await User.findByIdAndUpdate(
+                friendId,
+                { $pull: { friends: userId } },
+                { new: true }
+            ).populate([
+                {
+                    path: 'thoughts'
+                },
+                {
+                    path: 'friends',
+                    select: '-thoughts'
+                }
+            ]));
+
+            res.json(updatedUsers);
+        } catch (error) {
+            res.json(error);
         }
     }
 };
