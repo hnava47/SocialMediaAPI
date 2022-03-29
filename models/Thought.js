@@ -26,7 +26,7 @@ const thoughtSchema = new Schema({
     }
 });
 
-const dateFormat = (createdAt) => {
+function dateFormat(createdAt) {
     return moment(createdAt).format('YYYYMMDDHHmmss');
 };
 
