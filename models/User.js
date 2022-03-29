@@ -5,11 +5,14 @@ const userSchema = new Schema({
     username: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true
     },
     email: {
         type: String,
         required: true,
+        unique: true,
+        lowercase: true,
         validate: {
             validator: function(value) {
                 return isEmail(value);
@@ -19,14 +22,18 @@ const userSchema = new Schema({
             }
         }
     },
-    thoughts: {
-        type: Schema.Types.ObjectId,
-        ref: 'Thought'
-    },
-    friends: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }
+    thoughts: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Thought'
+        }
+    ],
+    friends: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ]
 },
 {
     toJSON: {

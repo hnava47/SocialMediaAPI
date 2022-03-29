@@ -20,6 +20,7 @@
   "homepage": "https://github.com/hnava47/SocialMediaAPI#readme",
   "dependencies": {
     "express": "^4.17.3",
+    "moment": "^2.29.1",
     "mongoose": "^6.2.9",
     "validator": "^13.7.0"
   }
