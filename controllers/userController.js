@@ -15,14 +15,7 @@ module.exports = {
         const { userId } = req.params;
 
         try {
-            const user = await User.findById(userId).populate([
-                {
-                    path: 'thoughts'
-                },
-                {
-                    path: 'friends'
-                }
-            ]);
+            const user = await User.findById(userId).populate('thoughts friends');
 
             res.json(user);
         } catch (error) {
