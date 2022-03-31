@@ -68,5 +68,36 @@ module.exports = {
         } catch (error) {
             res.json(error);
         }
+    },
+    createReaction: async (req, res) => {
+        const { thoughtId } = req.params;
+        const { reactionBody, username} = req.body;
+
+        try {
+            const updatedThought = await Thought.findByIdAndUpdate(
+                thoughtId,
+                { $addToSet: { reactions: { reactionBody, username } } },
+                { new: true }
+            );
+
+            res.json(updatedThought);
+        } catch (error) {
+            res.json(error);
+        }
+    },
+    deleteReactionByReactId: async (req, res) => {
+        const { thoughtId, reactionId } = req.params;
+
+        try {
+            const updatedThought = await Thought.findByIdAndUpdate(
+                thoughtId,
+                { $pull: { reactions: { reactionId } } },
+                { new: true }
+            );
+
+            res.json(updatedThought);
+        } catch (error) {
+            res.json(error);
+        }
     }
 };
