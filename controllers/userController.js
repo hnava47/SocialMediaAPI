@@ -1,5 +1,5 @@
 const { isEmail } = require('validator');
-const { User } = require('../models');
+const { User, Thought } = require('../models');
 
 module.exports = {
     getAllUsers: async (req, res) => {
@@ -79,6 +79,10 @@ module.exports = {
 
         try {
             const deletedUser = await User.findByIdAndDelete(userId);
+
+            deletedUser.thoughts.forEach(async (thought) => {
+                await Thought.findByIdAndDelete(thought._id);
+            });
 
             res.json(deletedUser);
         } catch (error) {
