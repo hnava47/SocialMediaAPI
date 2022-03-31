@@ -40,6 +40,24 @@ module.exports = {
             res.json(error);
         }
     },
+    updateThoughtById: async (req, res) => {
+        const { thoughtId } = req.params;
+
+        try {
+            const updatedThought = await Thought.findByIdAndUpdate(
+                thoughtId,
+                {...req.body},
+                {
+                    new: true,
+                    runValidators: true
+                }
+            );
+
+            res.json(updatedThought);
+        } catch (error) {
+            res.json(error);
+        }
+    },
     deleteThoughtById: async (req, res) => {
         const { thoughtId } = req.params;
 

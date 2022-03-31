@@ -3,6 +3,7 @@ const {
     getAllThoughts,
     getThoughtById,
     createThought,
+    updateThoughtById,
     deleteThoughtById
 } = require('../../../controllers/thoughtController');
 
@@ -12,6 +13,7 @@ router.route('/')
 
 router.route('/:thoughtId')
     .get(getThoughtById)
+    .put(updateThoughtById)
     .delete(deleteThoughtById);
 
 module.exports = router;
